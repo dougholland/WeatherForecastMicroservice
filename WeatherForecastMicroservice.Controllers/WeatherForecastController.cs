@@ -86,7 +86,7 @@
         /// <returns>The list of weather forecasts.</returns>
         [HttpGet("Forecasts", Name = "GetWeatherForecast")]
         [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 120)]
-        public async Task<IEnumerable<WeatherForecast>> GetWeatherForecastsAsync()
+        public async Task<ActionResult<IEnumerable<WeatherForecast>>> GetWeatherForecastsAsync()
         {
             var tracer = this.tracerProvider.GetTracer(this.GetType().FullName);
 
@@ -115,7 +115,7 @@
         /// </summary>
         /// <returns>The list of cached weather forecasts.</returns>
         [HttpGet("CachedForecasts", Name = "GetCachedWeatherForecast")]
-        public async Task<IEnumerable<WeatherForecast>> GetCachedWeatherForecastsAsync()
+        public async Task<ActionResult<IEnumerable<WeatherForecast>>> GetCachedWeatherForecastsAsync()
         {
             // establish an instance of the OpenTelemetry tracer.
             var tracer = this.tracerProvider.GetTracer(this.GetType().FullName);
@@ -136,14 +136,17 @@
                 });
             }
 
+            if (weatherForecasts == null)
+            {
+                return NotFound();
+            }
+
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetSlidingExpiration(TimeSpan.FromMinutes(2));
 
-            weatherForecasts = weatherForecasts ?? new List<WeatherForecast> { };
-
             memoryCache.Set<IEnumerable<WeatherForecast>>(cacheKey, weatherForecasts, cacheEntryOptions);
 
-            return weatherForecasts;
+            return Ok(weatherForecasts);
         }
 
         /// <summary>
