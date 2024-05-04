@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.4" />
+		<PackageReference Include="OpenTelemetry" Version="1.8.1" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.8.1" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.8.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\WeatherForecastMicroservice.Entities\WeatherForecastMicroservice.Entities.csproj" />
+	  <ProjectReference Include="..\WeatherForecastMicroservice.Model\WeatherForecastMicroservice.Model.csproj" />
+	</ItemGroup>
+
+</Project>
+
