@@ -1,53 +1,56 @@
 ﻿namespace WeatherForecastMicroservice.Controllers
 {
     using Azure.Messaging.ServiceBus;
+
     using Microsoft.AspNetCore.Authorization;
 
     using Microsoft.AspNetCore.Mvc;
+    
     using Microsoft.Extensions.Caching.Memory;
+    
     using Microsoft.Extensions.Configuration;
+    
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
+        
     using OpenTelemetry.Trace;
-    using WeatherForecastMicroservice.Entities;
+        
     using WeatherForecastMicroservice.Model;
 
     /// <summary>
-    /// Sample weather forecast controller.
+    /// Weather forecast controller.
     /// </summary>
     [ApiController]
-    //[Route("api/[controller]")]
     [Route("/")]
     [Authorize]
     public class WeatherForecastController : ControllerBase
     {
         /// <summary>
-        /// 
+        /// The trace provider to be used by the controller.
         /// </summary>
         private readonly TracerProvider tracerProvider;
 
         /// <summary>
-        /// 
+        /// The memory cache to be used by the controller.
         /// </summary>
         private readonly IMemoryCache memoryCache;
 
         /// <summary>
-        /// 
-        /// </summary>
-        private readonly ServiceBusClient serviceBus;
-
-        /// <summary>
-        /// 
+        /// The cache key for weather forecasts.
         /// </summary>
         private readonly string cacheKey = typeof(WeatherForecastController).Name;
 
         /// <summary>
-        /// An instance of the <see cref="Microsoft.Extensions.Logging.ILogger`1"/> interface.
+        /// The service bus client to be used by the controller.
+        /// </summary>
+        private readonly ServiceBusClient serviceBus;
+
+        /// <summary>
+        /// The logger to be used for logging within the controller.
         /// </summary>
         private readonly ILogger<WeatherForecastController> logger;
 
         /// <summary>
-        /// 
+        /// The configuration to be used by the controller.
         /// </summary>
         private readonly IConfiguration configuration;
 
