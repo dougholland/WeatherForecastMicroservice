@@ -24,9 +24,9 @@
         }
 
         /// <summary>
-        /// 
+        /// Handles the authentication within the development environment.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A task that represents the asynchronous authentication operation. The task result contains an instance of the <see cref="T:AuthenticateResult"/> class providing the result of the authentication.</returns>
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             var claims = new List<Claim>()
