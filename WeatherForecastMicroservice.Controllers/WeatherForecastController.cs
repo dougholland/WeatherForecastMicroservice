@@ -88,13 +88,11 @@
         [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 120)]
         public async Task<IEnumerable<WeatherForecast>> GetWeatherForecastsAsync()
         {
-            // establish an instance of the OpenTelemetry tracer.
             var tracer = this.tracerProvider.GetTracer(this.GetType().FullName);
 
             using var span = tracer.StartActiveSpan(nameof(GetWeatherForecastsAsync));
 
-            // TODO: refactor this into a service bus wrapper.
-            var sender = this.serviceBus.CreateSender("SampleMicroservice");
+            var sender = this.serviceBus.CreateSender(this.configuration["AzureServiceBus:Queue"]);
 
             var message = new ServiceBusMessage("GetWeatherForecastsAsync");
 
@@ -140,6 +138,8 @@
 
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetSlidingExpiration(TimeSpan.FromMinutes(2));
+
+            weatherForecasts = weatherForecasts ?? new List<WeatherForecast> { };
 
             memoryCache.Set<IEnumerable<WeatherForecast>>(cacheKey, weatherForecasts, cacheEntryOptions);
 

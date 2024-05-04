@@ -32,7 +32,7 @@
         /// The name of the service.
         /// </summary>
         /// <remarks>Used to define the service name within the OpenTelemetry configuration.</remarks>
-        private static readonly string serviceName = "ServiceName";
+        private static readonly string serviceName = "Weather Forecast Microservice";
 
         /// <summary>
         /// The entry point of the application.
@@ -69,7 +69,7 @@
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "SampleMicroService",
+                    Title = "Weather Forecast Microservice",
                     Version = "v1"
                 });
             });
@@ -106,7 +106,7 @@
 
             app.UseHttpsRedirection();
 
-            app.UseHealthChecks("/api/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+            app.UseHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
             {
                 Predicate = registration => registration.Tags.Contains("liveness")
             });
@@ -299,9 +299,9 @@
             {
                 var configuration = provider.GetService<IConfiguration>();
 
-                var connectionString = configuration["AzureServiceBus:ConnectionString"];
+                var connectionString = configuration?["AzureServiceBus:ConnectionString"];
 
-                var queue = configuration["AzureServiceBus:Queue"];
+                var queue = configuration?["AzureServiceBus:Queue"];
 
                 return new ServiceBusClient(connectionString);
             });
