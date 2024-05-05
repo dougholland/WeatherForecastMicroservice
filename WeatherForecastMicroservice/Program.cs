@@ -42,6 +42,9 @@
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // configure cross-origin resource sharing (CORS).
+            ConfigureCORS(builder);
+
             // configure in-memory cache - alternatively, configure distributed cache if service is expected to scale to multiple instances.
             builder.Services.AddMemoryCache();
 
@@ -85,6 +88,8 @@
 
                 // use the developer exception page in development.
                 app.UseDeveloperExceptionPage();
+
+                app.UseCors("AnyOrigin");
             }
             else
             {
@@ -98,6 +103,8 @@
 
                 // use the exception handler in other environments.
                 app.UseExceptionHandler("/error");
+
+                app.UseCors();
             }
 
             app.UseAuthentication();
@@ -151,6 +158,9 @@
             {
                 builder.Services.AddAuthentication("Development")
                     .AddScheme<AuthenticationSchemeOptions, MockAuthenticationHandler>("Development", options => { });
+
+                // builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("EntraID"));
             }
             else
             {
