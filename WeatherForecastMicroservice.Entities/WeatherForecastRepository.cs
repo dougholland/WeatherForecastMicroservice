@@ -23,7 +23,7 @@
         {
             WeatherForecastDbContextFactory factory = new WeatherForecastDbContextFactory();
 
-            this.context = factory.CreateDbContext(new string[] { });
+            this.context = factory.CreateDbContext();
         }
 
         /// <summary>
