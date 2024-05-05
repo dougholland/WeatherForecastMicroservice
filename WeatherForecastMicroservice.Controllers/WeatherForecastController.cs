@@ -85,7 +85,7 @@
         /// <summary>
         /// Gets a list of weather forecasts.
         /// </summary>
-        /// <returns>The list of weather forecasts.</returns>
+        /// <returns>A task that represents the asynchronous operation to get all forecasts. The task result contains all the weather forecasts.</returns>
         [RequiredScope("WeatherForecastMicroservice")]
         [HttpGet("Forecasts", Name = "GetWeatherForecast")]
         [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 120)]
@@ -116,7 +116,7 @@
         /// <summary>
         /// Gets a list of cached weather forecasts.
         /// </summary>
-        /// <returns>The list of cached weather forecasts.</returns>
+        /// <returns>A task that represents the asynchronous operation to get all forecasts. The task result contains all the weather forecasts.</returns>
         [RequiredScope("WeatherForecastMicroservice")]
         [HttpGet("CachedForecasts", Name = "GetCachedWeatherForecast")]
         public async Task<ActionResult<IEnumerable<WeatherForecast>>> GetCachedWeatherForecastsAsync()
@@ -156,7 +156,7 @@
         /// <summary>
         /// Gets an exception to test the ASP.NET Web API error handling endpoint.
         /// </summary>
-        /// <returns>An exception is thrown and therefore there is no return value.</returns>
+        /// <returns>A task that represents the asynchronous operation to get an error.</returns>
         /// <exception cref="Exception">An exception to test the ASP.NET Web API error handling endpoint.</exception>
         [RequiredScope("WeatherForecastMicroservice")]
         [Route("/error/test")]
