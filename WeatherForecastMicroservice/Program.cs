@@ -18,6 +18,8 @@
 
     using Microsoft.Extensions.Logging;
 
+    using Microsoft.Identity.Web;
+    
     using Microsoft.OpenApi.Models;
 
     using OpenTelemetry.Metrics;
@@ -158,39 +160,21 @@
             {
                 builder.Services.AddAuthentication("Development")
                     .AddScheme<AuthenticationSchemeOptions, MockAuthenticationHandler>("Development", options => { });
-
-                // builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("EntraID"));
             }
             else
             {
                 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    //.AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureADB2C"))
-                    .AddJwtBearer(options =>
+                    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("EntraID"));
+
+                builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    var handler = options.Events.OnTokenValidated;
+
+                    options.Events.OnTokenValidated = async context =>
                     {
-                        options.Events = new JwtBearerEvents
-                        {
-                            OnChallenge = context =>
-                            {
-                                if (context.Error != null)
-                                {
-                                    context.Response.Headers.Append("AuthenticationError", context.ErrorDescription);
-                                }
-
-                                return Task.CompletedTask;
-                            },
-
-                            OnAuthenticationFailed = context =>
-                            {
-                                if (context.Exception != null)
-                                {
-                                    // TODO: log exception
-                                }
-
-                                return Task.CompletedTask;
-                            }
-                        };
-                    });
+                        await handler(context);
+                    };
+                });
             }
         }
 
