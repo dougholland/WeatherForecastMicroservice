@@ -1,0 +1,12 @@
+{
+  "solution": {
+    "path": "WeatherForecastMicroservice.sln",
+    "projects": [
+      "WeatherForecastMicroservice.Controllers\\WeatherForecastMicroservice.Controllers.csproj",
+      "WeatherForecastMicroservice.Entities\\WeatherForecastMicroservice.Entities.csproj",
+      "WeatherForecastMicroservice.Model\\WeatherForecastMicroservice.Model.csproj",
+      "WeatherForecastMicroservice.UnitTests\\WeatherForecastMicroservice.UnitTests.csproj",
+      "WeatherForecastMicroservice\\WeatherForecastMicroservice.csproj"
+    ]
+  }
+}
