@@ -31,9 +31,9 @@
         }
 
         /// <summary>
-        /// 
+        /// Tests the <see cref="M:WeatherForecastRepository.GetAllForecastsAsync"/> method.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A task that represents the asynchronous unit test.</returns>
         [TestMethod]
         public async Task GetAllForecastsAsnc()
         {
@@ -55,6 +55,10 @@
             Assert.AreEqual<int>(2, result.Count());
         }
 
+        /// <summary>
+        /// Tests the <see cref="M:WeatherForecastRepository.GetWeatherForecastAsync"/> method.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous unit test.</returns>
         [TestMethod]
         public async Task GetWeatherForecastAsync()
         {
@@ -82,6 +86,10 @@
             Assert.AreEqual<string>(forecast.Summary, result.Summary);
         }
 
+        /// <summary>
+        /// Tests the <see cref="M:WeatherForecastRepository.AddWeatherForecast"/> method.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous unit test.</returns>
         [TestMethod]
         public async Task AddWeatherForecast()
         {
@@ -104,6 +112,10 @@
             Assert.IsTrue(context.WeatherForecasts.Any(forecast => forecast.Summary == "Warm"));
         }
 
+        /// <summary>
+        /// Tests the <see cref="M:WeatherForecastRepository.UpdateWeatherForecast"/> method.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous unit test.</returns>
         [TestMethod]
         public async Task UpdateWeatherForecast()
         {
@@ -138,6 +150,10 @@
             Assert.AreEqual<int>(forecast.TemperatureF, updatedForecast?.TemperatureF);
         }
 
+        /// <summary>
+        /// Tests the <see cref="M:WeatherForecastRepository.DeleteWeatherForecast"/> method.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous unit test.</returns>
         [TestMethod]
         public async Task DeleteWeatherForecast()
         {
