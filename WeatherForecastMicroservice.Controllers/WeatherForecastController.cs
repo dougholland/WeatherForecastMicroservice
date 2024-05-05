@@ -11,7 +11,9 @@
     using Microsoft.Extensions.Configuration;
     
     using Microsoft.Extensions.Logging;
-        
+
+    using Microsoft.Identity.Web.Resource;
+    
     using OpenTelemetry.Trace;
         
     using WeatherForecastMicroservice.Model;
@@ -84,6 +86,7 @@
         /// Gets a list of weather forecasts.
         /// </summary>
         /// <returns>The list of weather forecasts.</returns>
+        [RequiredScope("WeatherForecastMicroservice")]
         [HttpGet("Forecasts", Name = "GetWeatherForecast")]
         [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 120)]
         public async Task<ActionResult<IEnumerable<WeatherForecast>>> GetWeatherForecastsAsync()
@@ -114,6 +117,7 @@
         /// Gets a list of cached weather forecasts.
         /// </summary>
         /// <returns>The list of cached weather forecasts.</returns>
+        [RequiredScope("WeatherForecastMicroservice")]
         [HttpGet("CachedForecasts", Name = "GetCachedWeatherForecast")]
         public async Task<ActionResult<IEnumerable<WeatherForecast>>> GetCachedWeatherForecastsAsync()
         {
@@ -154,6 +158,7 @@
         /// </summary>
         /// <returns>An exception is thrown and therefore there is no return value.</returns>
         /// <exception cref="Exception">An exception to test the ASP.NET Web API error handling endpoint.</exception>
+        [RequiredScope("WeatherForecastMicroservice")]
         [Route("/error/test")]
         [HttpGet]
         [ResponseCache(Location = ResponseCacheLocation.None)]
