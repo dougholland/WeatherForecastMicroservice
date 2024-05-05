@@ -23,9 +23,9 @@ namespace WeatherForecastMicroservice.UnitTests
     public class WeatherForecastContollerUnitTests
     {
         /// <summary>
-        /// Unit test of the <see cref="WeatherForecastController.GetWeatherForecastsAsync"/> method.
+        /// Unit test of the <see cref="M:WeatherForecastController.GetWeatherForecastsAsync"/> method.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A task that represents the asynchronous unit test.</returns>
         [TestMethod]
         public async Task GetWeatherForecasts()
         {
@@ -49,11 +49,11 @@ namespace WeatherForecastMicroservice.UnitTests
         }
 
         /// <summary>
-        /// 
+        /// Unit test of the <see cref="M:WeatherForecastController.GetErrorAsync"/> method.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A task that represents the asynchronous unit test.</returns>
         [TestMethod]
-        public async Task GetError()
+        public async Task GetErrorAsync()
         {
             var memoryCache = new Mock<IMemoryCache>().Object;
 
