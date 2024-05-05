@@ -20,10 +20,10 @@
         private DbContextOptions<WeatherForecastDbContext> options;
 
         /// <summary>
-        /// 
+        /// Provides initialization for unit tests.
         /// </summary>
         [TestInitialize]
-        public void Initializate()
+        public void Initialize()
         {
             this.options = new DbContextOptionsBuilder<WeatherForecastDbContext>()
                 .UseInMemoryDatabase(databaseName: $"WeatherForecastDb{Guid.NewGuid()}")

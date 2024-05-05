@@ -13,7 +13,7 @@
     /// </summary>
     [ApiController]
     [ApiExplorerSettings(IgnoreApi = true)]
-    internal class ErrorController : ControllerBase
+    public class ErrorController : ControllerBase
     {
         /// <summary>
         /// An instance of the <see cref="T:ILogger"/> interface to be used for logging.
