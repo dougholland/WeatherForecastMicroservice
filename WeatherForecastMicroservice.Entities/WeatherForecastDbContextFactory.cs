@@ -25,7 +25,7 @@
 
             var builder = new DbContextOptionsBuilder<WeatherForecastDbContext>();
 
-            string connectionString = configuration["AzureSqlConnectionString"] ?? string.Empty;
+            string connectionString = configuration["AzureSqlConnection"] ?? string.Empty;
 
             builder.UseSqlServer(connectionString);
 

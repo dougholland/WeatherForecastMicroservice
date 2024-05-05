@@ -7,12 +7,12 @@
     using WeatherForecastMicroservice.Model;
 
     /// <summary>
-    /// 
+    /// Weather forecast repository.
     /// </summary>
     public class WeatherForecastRepository : IWeatherForecastRepository
     {
         /// <summary>
-        /// 
+        /// The weather forecast database context.
         /// </summary>
         private WeatherForecastDbContext context;
 
@@ -38,7 +38,7 @@
         /// <summary>
         /// Gets all weather forecasts asynchronously.
         /// </summary>
-        /// <returns>All weather forecasts.</returns>
+        /// <returns>A task that represents the asynchronous operation to get all forecasts. The task result contains all the weather forecasts within the repository.</returns>
         public async Task<IEnumerable<WeatherForecast>> GetAllForecastsAsync()
         {
             return await this.context.WeatherForecasts.ToListAsync();
@@ -48,7 +48,7 @@
         /// Gets a weather forecast asynchronously.
         /// </summary>
         /// <param name="id">The identifier of the weather forecast.</param>
-        /// <returns>The weather forecast.</returns>
+        /// <returns>A task that represents the asynchronous operation to get a specific forecast represented by the identifier. The task result contains the forecast, if found within the repository.</returns>
         public async Task<WeatherForecast?> GetForecastByIdAsync(int id)
         {
             return await this.context.WeatherForecasts.FindAsync(id);
