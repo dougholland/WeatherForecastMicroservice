@@ -9,14 +9,14 @@
     /// <summary>
     /// Creates instances of the <see cref="T:WeatherForecastDbContext"/> class.
     /// </summary>
-    public class WeatherForecastDbContextFactory : IDesignTimeDbContextFactory<WeatherForecastDbContext>
+    public class WeatherForecastDbContextFactory
     {
         /// <summary>
         /// Creates an instance of the <see cref="T:WeatherForecastDbContext"/> class.
         /// </summary>
         /// <param name="args">An array of argumments.</param>
         /// <returns>An instance of the <see cref="T:WeatherForecastDbContext"/> class.</returns>
-        public WeatherForecastDbContext CreateDbContext(string[] args)
+        public WeatherForecastDbContext CreateDbContext()
         {
             IConfiguration configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
