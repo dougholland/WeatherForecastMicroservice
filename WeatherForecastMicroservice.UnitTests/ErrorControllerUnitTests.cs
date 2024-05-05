@@ -26,12 +26,12 @@
         /// <summary>
         /// The mock logger instance to be used for unit tests.
         /// </summary>
-        private ILogger<ErrorController> logger = new Mock<ILogger<ErrorController>>().Object;
+        private readonly ILogger<ErrorController> logger = new Mock<ILogger<ErrorController>>().Object;
 
         /// <summary>
         /// The mock environment to be used for unit tests.
         /// </summary>
-        private IHostEnvironment environment = new Mock<IHostEnvironment>().Object;
+        private readonly IHostEnvironment environment = new Mock<IHostEnvironment>().Object;
 
         /// <summary>
         /// Provides initialization for unit tests.

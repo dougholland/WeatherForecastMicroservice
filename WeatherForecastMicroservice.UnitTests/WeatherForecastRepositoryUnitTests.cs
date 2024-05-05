@@ -17,7 +17,7 @@
         /// <summary>
         /// 
         /// </summary>
-        private DbContextOptions<WeatherForecastDbContext> options;
+        private DbContextOptions<WeatherForecastDbContext>? options;
 
         /// <summary>
         /// Provides initialization for unit tests.
@@ -58,114 +58,110 @@
         [TestMethod]
         public async Task GetWeatherForecastAsync()
         {
-            using (var context = new WeatherForecastDbContext(options))
-            {
-                DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+            using var context = new WeatherForecastDbContext(options);
 
-                var forecast = new WeatherForecast { Date = today, TemperatureC = 25, Summary = "Warm" };
-                context.Add<WeatherForecast>(forecast);
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
 
-                context.SaveChanges();
+            var forecast = new WeatherForecast { Date = today, TemperatureC = 25, Summary = "Warm" };
+            context.Add<WeatherForecast>(forecast);
 
-                var repository = new WeatherForecastRepository(context);
+            context.SaveChanges();
 
-                var result = await repository.GetForecastByIdAsync(forecast.Id);
+            var repository = new WeatherForecastRepository(context);
 
-                Assert.IsNotNull(result);
+            var result = await repository.GetForecastByIdAsync(forecast.Id);
 
-                Assert.AreEqual<DateOnly>(forecast.Date, result.Date);
+            Assert.IsNotNull(result);
 
-                Assert.AreEqual<int>(forecast.TemperatureC, result.TemperatureC);
+            Assert.AreEqual<DateOnly>(forecast.Date, result.Date);
 
-                Assert.AreEqual<int>(forecast.TemperatureF, result.TemperatureF);
+            Assert.AreEqual<int>(forecast.TemperatureC, result.TemperatureC);
 
-                Assert.AreEqual<string>(forecast.Summary, result.Summary);
-            }
+            Assert.AreEqual<int>(forecast.TemperatureF, result.TemperatureF);
+
+            Assert.AreEqual<string>(forecast.Summary, result.Summary);
         }
 
         [TestMethod]
         public async Task AddWeatherForecast()
         {
-            using (var context = new WeatherForecastDbContext(options))
-            {
-                var repository = new WeatherForecastRepository(context);
+            using var context = new WeatherForecastDbContext(options);
 
-                DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+            var repository = new WeatherForecastRepository(context);
 
-                var forecast = new WeatherForecast { Date = today, TemperatureC = 25, Summary = "Warm" };
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
 
-                await repository.SaveForecastAsync(forecast);
+            var forecast = new WeatherForecast { Date = today, TemperatureC = 25, Summary = "Warm" };
 
-                Assert.AreEqual<int>(1, context.WeatherForecasts.Count());
+            await repository.SaveForecastAsync(forecast);
 
-                Assert.IsTrue(context.WeatherForecasts.Any(forecast => forecast.Date == today));
+            Assert.AreEqual<int>(1, context.WeatherForecasts.Count());
 
-                Assert.IsTrue(context.WeatherForecasts.Any(forecast => forecast.TemperatureC == 25));
+            Assert.IsTrue(context.WeatherForecasts.Any(forecast => forecast.Date == today));
 
-                Assert.IsTrue(context.WeatherForecasts.Any(forecast => forecast.Summary == "Warm"));
-            }
+            Assert.IsTrue(context.WeatherForecasts.Any(forecast => forecast.TemperatureC == 25));
+
+            Assert.IsTrue(context.WeatherForecasts.Any(forecast => forecast.Summary == "Warm"));
         }
 
         [TestMethod]
         public async Task UpdateWeatherForecast()
         {
-            using (var context = new WeatherForecastDbContext(options))
-            {
-                var repository = new WeatherForecastRepository(context);
+            using var context = new WeatherForecastDbContext(options);
+           
+            var repository = new WeatherForecastRepository(context);
 
-                DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
 
-                var forecast = new WeatherForecast { Date = today, TemperatureC = 25, Summary = "Warm" };
+            var forecast = new WeatherForecast { Date = today, TemperatureC = 25, Summary = "Warm" };
 
-                var saved = await repository.SaveForecastAsync(forecast);
+            var saved = await repository.SaveForecastAsync(forecast);
+            
+            Assert.AreEqual<int>(1, saved);
 
-                Assert.AreEqual<int>(1, saved);
+            forecast.TemperatureC = 30;
 
-                forecast.TemperatureC = 30;
+            await repository.UpdateForecastAsync(forecast);
 
-                await repository.UpdateForecastAsync(forecast);
+            var updatedForecast = await context.WeatherForecasts.FindAsync(forecast.Id);
 
-                var updatedForecast = await context.WeatherForecasts.FindAsync(forecast.Id);
+            Assert.AreEqual<int>(1, context.WeatherForecasts.Count());
 
-                Assert.AreEqual<int>(1, context.WeatherForecasts.Count());
+            Assert.AreEqual<int>(forecast.Id, updatedForecast?.Id);
 
-                Assert.AreEqual<int>(forecast.Id, updatedForecast?.Id);
+            Assert.AreEqual<DateOnly>(forecast.Date, updatedForecast?.Date);
 
-                Assert.AreEqual<DateOnly>(forecast.Date, updatedForecast?.Date);
+            Assert.AreEqual<string>(forecast.Summary, updatedForecast?.Summary);
 
-                Assert.AreEqual<string>(forecast.Summary, updatedForecast?.Summary);
+            Assert.AreEqual<int>(forecast.TemperatureC, updatedForecast?.TemperatureC);
 
-                Assert.AreEqual<int>(forecast.TemperatureC, updatedForecast?.TemperatureC);
-
-                Assert.AreEqual<int>(forecast.TemperatureF, updatedForecast?.TemperatureF);
-            }
+            Assert.AreEqual<int>(forecast.TemperatureF, updatedForecast?.TemperatureF);
         }
 
         [TestMethod]
         public async Task DeleteWeatherForecast()
         {
-            using (var context = new WeatherForecastDbContext(options))
-            {
-                DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+            using var context = new WeatherForecastDbContext(options);
 
-                var forecast = new WeatherForecast { Date = today, TemperatureC = 25, Summary = "Warm" };
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
 
-                context.Add(forecast);
+            var forecast = new WeatherForecast { Date = today, TemperatureC = 25, Summary = "Warm" };
 
-                var saved = await context.SaveChangesAsync();
+            context.Add(forecast);
 
-                Assert.AreEqual<int>(1, saved);
+            var saved = await context.SaveChangesAsync();
 
-                var repository = new WeatherForecastRepository(context);
+            Assert.AreEqual<int>(1, saved);
 
-                var deleted = await repository.DeleteForecastByIdAsync(forecast.Id);
+            var repository = new WeatherForecastRepository(context);
 
-                Assert.AreEqual(1, deleted);
+            var deleted = await repository.DeleteForecastByIdAsync(forecast.Id);
 
-                var result = await context.WeatherForecasts.FindAsync(forecast?.Id);
+            Assert.AreEqual(1, deleted);
 
-                Assert.IsNull(result);
-            }
+            var result = await context.WeatherForecasts.FindAsync(forecast?.Id);
+
+            Assert.IsNull(result);
         }
     }
 }
