@@ -81,7 +81,7 @@
         /// Gets a list of weather forecasts.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation to get all forecasts. The task result contains all the weather forecasts.</returns>
-        [RequiredScope("WeatherForecastMicroservice")]
+        [RequiredScope("WeatherForecasts")]
         [HttpGet("WeatherForecasts", Name = "GetWeatherForecasts")]
         [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 120)]
         public async Task<ActionResult<IEnumerable<WeatherForecast>>> GetWeatherForecastsAsync()
@@ -105,7 +105,7 @@
         /// <param name="id">The identifier of the weather forecast.</param>
         /// <returns>A task that represents the asynchronous operation to get a weather forecast. The task result contains the weather forecast.</returns>
         /// <exception cref="NotImplementedException"></exception>
-        [RequiredScope("WeatherForecastMicroservice")]
+        [RequiredScope("WeatherForecasts")]
         [HttpGet("WeatherForecast{id}", Name = "GetWeatherForecast")]
         public async Task<ActionResult<WeatherForecast>> GetWeatherForecastAsync(int id)
         {
@@ -128,7 +128,7 @@
         /// </summary>
         /// <param name="forecast">The forecast to be created within the repository.</param>
         /// <returns></returns>
-        [RequiredScope("WeatherForecastMicroservice")]
+        [RequiredScope("WeatherForecasts")]
         [HttpPost("WeatherForecast", Name = "PostWeatherForecast")]
         public async Task<IActionResult> PostWeatherForecastAsync([FromBody] WeatherForecast forecast)
         {
@@ -151,6 +151,7 @@
         /// </summary>
         /// <param name="id">The identifier of the weather forecast.</param>
         /// <returns>A task that represents the asynchronous operation to delete a weather forecast. The task result indicates whether the weather forecast was successfully deleted.</returns>
+        [RequiredScope("WeatherForecasts")]
         [HttpDelete("WeatherForecast{id}", Name = "DeleteWeatherForecast")]
         public async Task<IActionResult> DeleteWeatherForecastAsync(int id)
         {
@@ -175,7 +176,7 @@
         /// </summary>
         /// <returns>A task that represents the asynchronous operation to get an error.</returns>
         /// <exception cref="Exception">An exception to test the ASP.NET Web API error handling endpoint.</exception>
-        [RequiredScope("WeatherForecastMicroservice")]
+        [RequiredScope("WeatherForecasts")]
         [HttpGet("Error", Name = "GetError")]
         [ResponseCache(Location = ResponseCacheLocation.None)]
         public async Task<IActionResult> GetErrorAsync()
