@@ -57,14 +57,6 @@
         private readonly IWeatherForecastRepository repository;
 
         /// <summary>
-        /// Sample list of weather conditions.
-        /// </summary>
-        private readonly List<string> Conditions =
-        [
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        ];
-
-        /// <summary>
         /// Creates an instance of the <see cref="WeatherForecastController"/> class.
         /// </summary>
         /// <param name="logger">The logger to be used by the controller.</param>
@@ -115,8 +107,12 @@
         /// <exception cref="NotImplementedException"></exception>
         [RequiredScope("WeatherForecastMicroservice")]
         [HttpGet("WeatherForecast{id}", Name = "GetWeatherForecast")]
-        public async Task<ActionResult<WeatherForecast>> GetWeatherForecast(int id)
+        public async Task<ActionResult<WeatherForecast>> GetWeatherForecastAsync(int id)
         {
+            var tracer = this.tracerProvider.GetTracer(this.GetType().FullName);
+
+            using var span = tracer.StartActiveSpan(nameof(GetWeatherForecastAsync));
+
             var forecast = await this.repository.GetForecastByIdAsync(id);
             
             if (forecast == null)
@@ -136,6 +132,10 @@
         [HttpPost("WeatherForecast", Name = "PostWeatherForecast")]
         public async Task<IActionResult> PostWeatherForecastAsync([FromBody] WeatherForecast forecast)
         {
+            var tracer = this.tracerProvider.GetTracer(this.GetType().FullName);
+
+            using var span = tracer.StartActiveSpan(nameof(PostWeatherForecastAsync));
+
             if (forecast == null)
             {
                 return BadRequest("Weather forecast is null.");
@@ -154,6 +154,10 @@
         [HttpDelete("WeatherForecast{id}", Name = "DeleteWeatherForecast")]
         public async Task<IActionResult> DeleteWeatherForecastAsync(int id)
         {
+            var tracer = this.tracerProvider.GetTracer(this.GetType().FullName);
+
+            using var span = tracer.StartActiveSpan(nameof(DeleteWeatherForecastAsync));
+
             var forecast = await this.repository.GetForecastByIdAsync(id);
 
             if (forecast == null)
