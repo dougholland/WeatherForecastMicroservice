@@ -104,27 +104,7 @@
 
             await (sender?.SendMessageAsync(message) ?? Task.CompletedTask);
 
-            /*
-            return await Task.Run(() =>
-            {
-                return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-                {
-                    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    TemperatureC = Random.Shared.Next(-20, 55),
-                    Summary = Conditions[Random.Shared.Next(Conditions.Count)]
-                })
-                .ToArray();
-            });
-            */
-
-            var forecasts = await this.repository.GetForecastsAsync();
-
-            if (forecasts.Count() == 0)
-            {
-                return NotFound(forecasts);
-            }
-
-            return Ok(forecasts);
+            return Ok(await this.repository.GetForecastsAsync());
         }
 
         /// <summary>
