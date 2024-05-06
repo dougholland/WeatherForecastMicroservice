@@ -73,7 +73,7 @@
 
             ConfigureHealthChecks(builder);
 
-            ConfigureAuthentication(builder);
+            // ConfigureAuthentication(builder);
 
             builder.Services.AddEndpointsApiExplorer();
 
