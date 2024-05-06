@@ -123,9 +123,9 @@
                 app.UseCors();
             }
 
-            app.UseAuthentication();
+            // app.UseAuthentication();
 
-            app.UseAuthorization();
+            // app.UseAuthorization();
 
             app.UseHttpsRedirection();
 
