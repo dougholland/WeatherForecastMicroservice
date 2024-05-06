@@ -178,12 +178,10 @@
         /// <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/> instance used to build the web application or services.</param>
         private static void ConfigureAuthentication(WebApplicationBuilder builder)
         {
-
-            //if (builder.Environment.IsDevelopment())
-            //{
+            if (builder.Environment.IsDevelopment())
+            {
                 builder.Services.AddAuthentication("Development")
                     .AddScheme<AuthenticationSchemeOptions, MockAuthenticationHandler>("Development", options => { });
-            /*
             }
             else
             {
@@ -200,7 +198,6 @@
                     };
                 });
             }
-            */
         }
 
         /// <summary>
