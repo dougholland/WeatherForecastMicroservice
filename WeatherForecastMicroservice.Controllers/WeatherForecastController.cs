@@ -15,14 +15,16 @@
     using Microsoft.Identity.Web.Resource;
     
     using OpenTelemetry.Trace;
-        
+
+    using WeatherForecastMicroservice.Entities;
+    
     using WeatherForecastMicroservice.Model;
 
     /// <summary>
     /// Weather forecast controller.
     /// </summary>
     [ApiController]
-    [Route("/")]
+    [Route("/api")]
     [Authorize]
     public class WeatherForecastController : ControllerBase
     {
@@ -30,11 +32,6 @@
         /// The trace provider to be used by the controller.
         /// </summary>
         private readonly TracerProvider tracerProvider;
-
-        /// <summary>
-        /// The memory cache to be used by the controller.
-        /// </summary>
-        private readonly IMemoryCache memoryCache;
 
         /// <summary>
         /// The cache key for weather forecasts.
@@ -57,6 +54,11 @@
         private readonly IConfiguration configuration;
 
         /// <summary>
+        /// The weather forecast repository to be used by the controller.
+        /// </summary>
+        private readonly IWeatherForecastRepository repository;
+
+        /// <summary>
         /// Sample list of weather conditions.
         /// </summary>
         private readonly List<string> Conditions =
@@ -69,10 +71,11 @@
         /// </summary>
         /// <param name="logger">The logger to be used by the controller.</param>
         /// <param name="tracerProvider">The tracer provider to be used by the controller.</param>
-        public WeatherForecastController(IMemoryCache memoryCache, ILogger<WeatherForecastController> logger, TracerProvider tracerProvider, ServiceBusClient serviceBus, IConfiguration configuration)
+        /// <param name="configuration">The configuration to be used by the controller.</param>
+        /// <param name="serviceBus">The service bus client to be used by the controller.</param>
+        
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, TracerProvider tracerProvider, ServiceBusClient serviceBus, IConfiguration configuration, IWeatherForecastRepository repository)
         {
-            this.memoryCache = memoryCache;
-
             this.logger = logger;
 
             this.tracerProvider = tracerProvider;
@@ -80,6 +83,8 @@
             this.serviceBus = serviceBus;
 
             this.configuration = configuration;
+
+            this.repository = repository;
         }
 
         /// <summary>
@@ -87,7 +92,7 @@
         /// </summary>
         /// <returns>A task that represents the asynchronous operation to get all forecasts. The task result contains all the weather forecasts.</returns>
         [RequiredScope("WeatherForecastMicroservice")]
-        [HttpGet("Forecasts", Name = "GetWeatherForecast")]
+        [HttpGet("WeatherForecasts", Name = "GetWeatherForecasts")]
         [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 120)]
         public async Task<ActionResult<IEnumerable<WeatherForecast>>> GetWeatherForecastsAsync()
         {
@@ -114,43 +119,30 @@
         }
 
         /// <summary>
-        /// Gets a list of cached weather forecasts.
+        /// Gets a weather forecasts based on the given identifier.
         /// </summary>
-        /// <returns>A task that represents the asynchronous operation to get all forecasts. The task result contains all the weather forecasts.</returns>
+        /// <param name="id">The identifier of the weather forecast.</param>
+        /// <returns>A task that represents the asynchronous operation to get a weather forecast. The task result contains the weather forecast.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         [RequiredScope("WeatherForecastMicroservice")]
-        [HttpGet("CachedForecasts", Name = "GetCachedWeatherForecast")]
-        public async Task<ActionResult<IEnumerable<WeatherForecast>>> GetCachedWeatherForecastsAsync()
+        [HttpGet("WeatherForecast{id}", Name = "GetWeatherForecast")]
+        public async Task<ActionResult<WeatherForecast>> GetWeatherForecast(int id)
         {
-            // establish an instance of the OpenTelemetry tracer.
-            var tracer = this.tracerProvider.GetTracer(this.GetType().FullName);
+            throw new NotImplementedException();
+        }
 
-            using var span = tracer.StartActiveSpan(nameof(GetWeatherForecastsAsync));
-
-            if (!memoryCache.TryGetValue<IEnumerable<WeatherForecast>>(cacheKey, out var weatherForecasts))
+        [RequiredScope("WeatherForecastMicroservice")]
+        [HttpPost("WeatherForecast", Name = "PostWeatherForecast")]
+        public async Task<IActionResult> PostWeatherForecastAsync([FromBody] WeatherForecast forecast)
+        {
+            if (forecast == null)
             {
-                weatherForecasts = await Task.Run(() =>
-                {
-                    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-                    {
-                        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        TemperatureC = Random.Shared.Next(-20, 55),
-                        Summary = Conditions[Random.Shared.Next(Conditions.Count)]
-                    })
-                    .ToArray();
-                });
+                return BadRequest("Weather forecast is null.");
             }
 
-            if (weatherForecasts == null)
-            {
-                return NotFound();
-            }
+            await this.repository.SaveForecastAsync(forecast);
 
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
-                .SetSlidingExpiration(TimeSpan.FromMinutes(2));
-
-            memoryCache.Set<IEnumerable<WeatherForecast>>(cacheKey, weatherForecasts, cacheEntryOptions);
-
-            return Ok(weatherForecasts);
+            return CreatedAtAction("GetWeatherForecast", new { id = forecast.Id }, forecast);
         }
 
         /// <summary>
@@ -159,8 +151,7 @@
         /// <returns>A task that represents the asynchronous operation to get an error.</returns>
         /// <exception cref="Exception">An exception to test the ASP.NET Web API error handling endpoint.</exception>
         [RequiredScope("WeatherForecastMicroservice")]
-        [Route("/error/test")]
-        [HttpGet]
+        [HttpGet("Error", Name = "GetError")]
         [ResponseCache(Location = ResponseCacheLocation.None)]
         public async Task<IActionResult> GetErrorAsync()
         {

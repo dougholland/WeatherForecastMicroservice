@@ -16,6 +16,8 @@ namespace WeatherForecastMicroservice.UnitTests
 
     using WeatherForecastMicroservice.Controllers;
 
+    using WeatherForecastMicroservice.Entities;
+
     /// <summary>
     /// Provides unit tests for the <see cref="WeatherForecastController"/> class.
     /// </summary>
@@ -39,7 +41,9 @@ namespace WeatherForecastMicroservice.UnitTests
 
             var configuration = new Mock<IConfiguration>().Object;
 
-            WeatherForecastController controller = new WeatherForecastController(memoryCache, logger, tracerProvider, serviceBus, configuration);
+            var repository = new Mock<IWeatherForecastRepository>().Object;
+
+            WeatherForecastController controller = new WeatherForecastController(logger, tracerProvider, serviceBus, configuration, repository);
 
             var result = await controller.GetWeatherForecastsAsync();
 
@@ -65,7 +69,9 @@ namespace WeatherForecastMicroservice.UnitTests
 
             var configuration = new Mock<IConfiguration>().Object;
 
-            WeatherForecastController controller = new WeatherForecastController(memoryCache, logger, tracerProvider, serviceBus, configuration);
+            var repository = new Mock<IWeatherForecastRepository>().Object;
+
+            WeatherForecastController controller = new WeatherForecastController(logger, tracerProvider, serviceBus, configuration, repository);
 
             var ex = await Assert.ThrowsExceptionAsync<Exception>(controller.GetErrorAsync);
 
