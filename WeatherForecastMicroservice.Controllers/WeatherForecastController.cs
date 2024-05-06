@@ -104,6 +104,7 @@
 
             await (sender?.SendMessageAsync(message) ?? Task.CompletedTask);
 
+            /*
             return await Task.Run(() =>
             {
                 return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -114,6 +115,16 @@
                 })
                 .ToArray();
             });
+            */
+
+            var forecasts = await this.repository.GetForecastsAsync();
+
+            if (forecasts.Count() == 0)
+            {
+                return NotFound(forecasts);
+            }
+
+            return Ok(forecasts);
         }
 
         /// <summary>
