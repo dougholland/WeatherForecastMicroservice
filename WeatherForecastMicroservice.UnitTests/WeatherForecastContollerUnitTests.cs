@@ -1,7 +1,7 @@
 namespace WeatherForecastMicroservice.UnitTests
 {
     using Azure.Messaging.ServiceBus;
-    using Microsoft.AspNetCore.Http.HttpResults;
+    
     using Microsoft.AspNetCore.Mvc;
     
     using Microsoft.Extensions.Caching.Memory;
