@@ -129,7 +129,7 @@
 
             app.UseHttpsRedirection();
 
-            app.UseHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+            app.UseHealthChecks("/api/health/", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
             {
                 Predicate = registration => registration.Tags.Contains("liveness")
             });
