@@ -39,7 +39,7 @@
         /// Gets all weather forecasts asynchronously.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation to get all forecasts. The task result contains all the weather forecasts within the repository.</returns>
-        public async Task<IEnumerable<WeatherForecast>> GetAllForecastsAsync()
+        public async Task<IEnumerable<WeatherForecast>> GetForecastsAsync()
         {
             return await this.context.WeatherForecasts.ToListAsync();
         }

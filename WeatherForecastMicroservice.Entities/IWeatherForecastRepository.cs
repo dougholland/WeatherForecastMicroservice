@@ -11,7 +11,7 @@
         /// Gets all weather forecasts asynchronously.
         /// </summary>
         /// <returns>All weather forecasts.</returns>
-        Task<IEnumerable<WeatherForecast>> GetAllForecastsAsync();
+        Task<IEnumerable<WeatherForecast>> GetForecastsAsync();
 
         /// <summary>
         /// Gets a weather forecast asynchronously.

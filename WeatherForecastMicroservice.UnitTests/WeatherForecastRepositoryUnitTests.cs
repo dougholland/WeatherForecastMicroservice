@@ -50,7 +50,7 @@
 
             var repository = new WeatherForecastRepository(context);
 
-            var result = await repository.GetAllForecastsAsync();
+            var result = await repository.GetForecastsAsync();
 
             Assert.AreEqual<int>(2, result.Count());
         }
