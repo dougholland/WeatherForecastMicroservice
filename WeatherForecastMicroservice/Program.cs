@@ -13,7 +13,9 @@
     using Microsoft.AspNetCore.Authentication.JwtBearer;
 
     using Microsoft.AspNetCore.Builder;
-
+    
+    using Microsoft.EntityFrameworkCore;
+    
     using Microsoft.Extensions.Diagnostics.HealthChecks;
 
     using Microsoft.Extensions.Logging;
@@ -28,6 +30,11 @@
 
     using OpenTelemetry.Trace;
 
+    using WeatherForecastMicroservice.Entities;
+
+    /// <summary>
+    /// Defines the application entry point.
+    /// </summary>
     public class Program
     {
         /// <summary>
@@ -78,6 +85,13 @@
                     Version = "v1"
                 });
             });
+
+            builder.Services.AddDbContextFactory<WeatherForecastDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("WeatherForecastDbContext"));
+            });
+
+            builder.Services.AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
 
             var app = builder.Build();
 
