@@ -2,8 +2,6 @@
 {
     using Microsoft.EntityFrameworkCore;
 
-    using WeatherForecastMicroservice.Entities;
-
     using WeatherForecastMicroservice.Model;
 
     /// <summary>
