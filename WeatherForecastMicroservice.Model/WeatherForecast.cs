@@ -3,7 +3,7 @@
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// 
+    /// Defines the weather forecast model.
     /// </summary>
     public class WeatherForecast
     {
