@@ -88,7 +88,7 @@
 
             builder.Services.AddDbContextFactory<WeatherForecastDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("WeatherForecastDbContext"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSqlConnection"));
             });
 
             builder.Services.AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
