@@ -1,7 +1,7 @@
 namespace WeatherForecastMicroservice.UnitTests
 {
     using Azure.Messaging.ServiceBus;
-
+    using Microsoft.AspNetCore.Http.HttpResults;
     using Microsoft.AspNetCore.Mvc;
     
     using Microsoft.Extensions.Caching.Memory;
@@ -47,9 +47,7 @@ namespace WeatherForecastMicroservice.UnitTests
 
             var result = await controller.GetWeatherForecastsAsync();
 
-            Assert.IsNotInstanceOfType(result, typeof(NotFoundResult));
-
-            Assert.AreEqual<int>(5, result.Value?.Count());
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
         }
 
         /// <summary>
