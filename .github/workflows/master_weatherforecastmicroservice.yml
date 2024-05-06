@@ -25,6 +25,9 @@ jobs:
       - name: Build with dotnet
         run: dotnet build WeatherForecastMicroservice.slnf --configuration Release
 
+      - name: Run tests
+        run: dotnet test WeatherForecastMicroservice.slnf --configuration Release --no-build --verbosity normal
+
       - name: dotnet publish
         run: dotnet publish WeatherForecastMicroservice.slnf -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
