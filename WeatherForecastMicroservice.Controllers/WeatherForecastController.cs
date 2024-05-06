@@ -6,8 +6,6 @@
 
     using Microsoft.AspNetCore.Mvc;
     
-    using Microsoft.Extensions.Caching.Memory;
-    
     using Microsoft.Extensions.Configuration;
     
     using Microsoft.Extensions.Logging;
@@ -128,9 +126,21 @@
         [HttpGet("WeatherForecast{id}", Name = "GetWeatherForecast")]
         public async Task<ActionResult<WeatherForecast>> GetWeatherForecast(int id)
         {
-            throw new NotImplementedException();
+            var forecast = await this.repository.GetForecastByIdAsync(id);
+            
+            if (forecast == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(forecast);
         }
 
+        /// <summary>
+        /// Posts a weather forecast.
+        /// </summary>
+        /// <param name="forecast">The forecast to be created within the repository.</param>
+        /// <returns></returns>
         [RequiredScope("WeatherForecastMicroservice")]
         [HttpPost("WeatherForecast", Name = "PostWeatherForecast")]
         public async Task<IActionResult> PostWeatherForecastAsync([FromBody] WeatherForecast forecast)
@@ -143,6 +153,26 @@
             await this.repository.SaveForecastAsync(forecast);
 
             return CreatedAtAction("GetWeatherForecast", new { id = forecast.Id }, forecast);
+        }
+
+        /// <summary>
+        /// Deletes a weather forecast based on the given identifier.
+        /// </summary>
+        /// <param name="id">The identifier of the weather forecast.</param>
+        /// <returns>A task that represents the asynchronous operation to delete a weather forecast. The task result indicates whether the weather forecast was successfully deleted.</returns>
+        [HttpDelete("WeatherForecast{id}", Name = "DeleteWeatherForecast")]
+        public async Task<IActionResult> DeleteWeatherForecastAsync(int id)
+        {
+            var forecast = await this.repository.GetForecastByIdAsync(id);
+
+            if (forecast == null)
+            {
+                return NotFound();
+            }
+
+            await this.repository.DeleteForecastAsync(forecast);
+
+            return NoContent();
         }
 
         /// <summary>
