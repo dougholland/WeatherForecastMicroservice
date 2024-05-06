@@ -11,6 +11,7 @@
     /// <summary>
     /// Error controller.
     /// </summary>
+    [Route("/api")]
     [ApiController]
     [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorController : ControllerBase
