@@ -89,7 +89,14 @@
             builder.Services.AddDbContextFactory<WeatherForecastDbContext>(options =>
             {
                 // Azure SQL connection string is stored within Azure Key Vault and read from Azure App Configuration.
-                options.UseSqlServer(builder.Configuration["AzureSqlConnection"]);
+                var connectionString = builder.Configuration["AzureSqlConnection"];
+                
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    throw new InvalidOperationException("The connection string could not be read from Azure App Configuration.");
+                }
+
+                options.UseSqlServer(connectionString);
             });
 
             builder.Services.AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
