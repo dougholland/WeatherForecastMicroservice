@@ -29,7 +29,7 @@
     using OpenTelemetry.Resources;
 
     using OpenTelemetry.Trace;
-
+    using System.Text.Json;
     using WeatherForecastMicroservice.Entities;
 
     /// <summary>
@@ -190,11 +190,34 @@
 
                 builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
-                    var handler = options.Events.OnTokenValidated;
+                    var tokenValidatedHandler = options.Events.OnTokenValidated;
 
                     options.Events.OnTokenValidated = async context =>
                     {
-                        await handler(context);
+                        if (tokenValidatedHandler != null)
+                        {
+                            await tokenValidatedHandler(context);
+                        }
+                    };
+
+                    var authenticationFailedHandler = options.Events.OnAuthenticationFailed;
+
+                    options.Events.OnAuthenticationFailed = async context =>
+                    {
+                        context.Response.Headers["Content-Type"] = "application/json";
+
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+
+                        await context.Response.WriteAsync(JsonSerializer.Serialize(new
+                        {
+                            context.Exception.Message,
+                            context.Exception.StackTrace
+                        }));
+
+                        if (authenticationFailedHandler != null)
+                        {
+                            await authenticationFailedHandler(context);
+                        }
                     };
                 });
             }
