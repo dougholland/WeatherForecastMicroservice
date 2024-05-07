@@ -42,6 +42,8 @@
                 
                 span?.SetTag("method", context.Request.Method);
 
+                span?.SetTag("ip.address", context.Connection.RemoteIpAddress?.ToString());
+
                 span?.SetTag("status.code", context.Response.StatusCode);
 
                 if (context.User.Identity?.IsAuthenticated == true)
