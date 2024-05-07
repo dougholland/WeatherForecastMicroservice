@@ -87,7 +87,7 @@
         }
 
         /// <summary>
-        /// Tests the <see cref="M:WeatherForecastRepository.AddWeatherForecast"/> method.
+        /// Tests the <see cref="M:WeatherForecastRepository.AddWeatherForecastAsync"/> method.
         /// </summary>
         /// <returns>A task that represents the asynchronous unit test.</returns>
         [TestMethod]
@@ -113,7 +113,7 @@
         }
 
         /// <summary>
-        /// Tests the <see cref="M:WeatherForecastRepository.UpdateWeatherForecast"/> method.
+        /// Tests the <see cref="M:WeatherForecastRepository.UpdateWeatherForecastAsync"/> method.
         /// </summary>
         /// <returns>A task that represents the asynchronous unit test.</returns>
         [TestMethod]
@@ -149,11 +149,41 @@
         }
 
         /// <summary>
-        /// Tests the <see cref="M:WeatherForecastRepository.DeleteWeatherForecast"/> method.
+        /// Tests the <see cref="M:WeatherForecastRepository.DeleteWeatherForecastAsync"/> method.
         /// </summary>
         /// <returns>A task that represents the asynchronous unit test.</returns>
         [TestMethod]
         public async Task DeleteWeatherForecast()
+        {
+            using var context = new WeatherForecastDbContext(options);
+
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+
+            var forecast = new WeatherForecast { Date = today, TemperatureC = 25, Summary = "Warm" };
+
+            context.Add(forecast);
+
+            var saved = await context.SaveChangesAsync();
+
+            Assert.AreEqual<int>(1, saved);
+
+            var repository = new WeatherForecastRepository(context);
+
+            var deleted = await repository.DeleteWeatherForecastAsync(forecast);
+
+            Assert.AreEqual(1, deleted);
+
+            var result = await context.WeatherForecasts.FindAsync(forecast?.Id);
+
+            Assert.IsNull(result);
+        }
+
+        /// <summary>
+        /// Tests the <see cref="M:WeatherForecastRepository.DeleteWeatherForecast"/> method.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous unit test.</returns>
+        [TestMethod]
+        public async Task DeleteWeatherForecastById()
         {
             using var context = new WeatherForecastDbContext(options);
 
