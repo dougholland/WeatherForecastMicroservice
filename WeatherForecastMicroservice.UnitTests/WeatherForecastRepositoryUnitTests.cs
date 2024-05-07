@@ -50,7 +50,7 @@
 
             var repository = new WeatherForecastRepository(context);
 
-            var result = await repository.GetForecastsAsync();
+            var result = await repository.GetWeatherForecastsAsync();
 
             Assert.AreEqual<int>(2, result.Count());
         }
@@ -73,7 +73,7 @@
 
             var repository = new WeatherForecastRepository(context);
 
-            var result = await repository.GetForecastByIdAsync(forecast.Id);
+            var result = await repository.GetWeatherForecastByIdAsync(forecast.Id);
 
             Assert.IsNotNull(result);
 
@@ -101,7 +101,7 @@
 
             var forecast = new WeatherForecast { Date = today, TemperatureC = 25, Summary = "Warm" };
 
-            await repository.SaveForecastAsync(forecast);
+            await repository.AddWeatherForecastAsync(forecast);
 
             Assert.AreEqual<int>(1, context.WeatherForecasts.Count());
 
@@ -127,13 +127,11 @@
 
             var forecast = new WeatherForecast { Date = today, TemperatureC = 25, Summary = "Warm" };
 
-            var saved = await repository.SaveForecastAsync(forecast);
-            
-            Assert.AreEqual<int>(1, saved);
+            forecast = await repository.AddWeatherForecastAsync(forecast);
 
             forecast.TemperatureC = 30;
 
-            await repository.UpdateForecastAsync(forecast);
+            await repository.UpdateWeatherForecastAsync(forecast);
 
             var updatedForecast = await context.WeatherForecasts.FindAsync(forecast.Id);
 
@@ -171,7 +169,7 @@
 
             var repository = new WeatherForecastRepository(context);
 
-            var deleted = await repository.DeleteForecastByIdAsync(forecast.Id);
+            var deleted = await repository.DeleteWeatherForecastByIdAsync(forecast.Id);
 
             Assert.AreEqual(1, deleted);
 

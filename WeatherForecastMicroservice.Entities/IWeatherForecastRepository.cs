@@ -11,41 +11,41 @@
         /// Gets all weather forecasts asynchronously.
         /// </summary>
         /// <returns>All weather forecasts.</returns>
-        Task<IEnumerable<WeatherForecast>> GetForecastsAsync();
+        Task<IEnumerable<WeatherForecast>> GetWeatherForecastsAsync();
 
         /// <summary>
         /// Gets a weather forecast asynchronously.
         /// </summary>
         /// <param name="id">The identifier of the weather forecast.</param>
         /// <returns>The weather forecast.</returns>
-        Task<WeatherForecast?> GetForecastByIdAsync(int id);
+        Task<WeatherForecast?> GetWeatherForecastByIdAsync(int id);
 
         /// <summary>
-        /// Saves the specified weather forecast to the repository.
+        /// Adds the specified weather forecast to the repository.
         /// </summary>
         /// <param name="forecast">The weather forecast to be saved within the repository.</param>
         /// <returns>The number of </returns>
-        Task<int> SaveForecastAsync(WeatherForecast forecast);
-
-        /// <summary>
-        /// Deletes the weather forecast represented by the identifier from the repository.
-        /// </summary>
-        /// <param name="id">The identifier of the weather forecast.</param>
-        /// <returns>A task that represents the asynchronous delete operation. The task result contains the number of state entries deleted from the database.</returns>
-        Task<int> DeleteForecastByIdAsync(int id);
-
-        /// <summary>
-        /// Deletes the weather forecast from the repository.
-        /// </summary>
-        /// <param name="forecast">The weather forecast to be deleted.</param>
-        /// <returns>A task that represents the asynchronous delete operation. The task result contains the number of state entries deleted from the database.</returns>
-        Task<int> DeleteForecastAsync(WeatherForecast forecast);
+        Task<WeatherForecast> AddWeatherForecastAsync(WeatherForecast forecast);
 
         /// <summary>
         /// Updates the weather forecast within the repository.
         /// </summary>
         /// <param name="forecast">The weather forecast to be updated.</param>
         /// <returns>A task that represents the asynchronous update operation. The task result contains the number of state entries updated within the database.</returns>
-        Task<int> UpdateForecastAsync(WeatherForecast forecast);
+        Task<WeatherForecast> UpdateWeatherForecastAsync(WeatherForecast forecast);
+
+        /// <summary>
+        /// Deletes the weather forecast represented by the identifier from the repository.
+        /// </summary>
+        /// <param name="id">The identifier of the weather forecast.</param>
+        /// <returns>A task that represents the asynchronous delete operation. The task result contains the number of state entries deleted from the database.</returns>
+        Task<int> DeleteWeatherForecastByIdAsync(int id);
+
+        /// <summary>
+        /// Deletes the weather forecast from the repository.
+        /// </summary>
+        /// <param name="forecast">The weather forecast to be deleted.</param>
+        /// <returns>A task that represents the asynchronous delete operation. The task result contains the number of state entries deleted from the database.</returns>
+        Task<int> DeleteWeatherForecastAsync(WeatherForecast forecast);
     }
 }

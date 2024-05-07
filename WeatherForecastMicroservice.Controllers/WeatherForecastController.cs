@@ -96,7 +96,7 @@
 
             await (sender?.SendMessageAsync(message) ?? Task.CompletedTask);
 
-            return Ok(await this.repository.GetForecastsAsync());
+            return Ok(await this.repository.GetWeatherForecastsAsync());
         }
 
         /// <summary>
@@ -113,7 +113,7 @@
 
             using var span = tracer.StartActiveSpan(nameof(GetWeatherForecastAsync));
 
-            var forecast = await this.repository.GetForecastByIdAsync(id);
+            var forecast = await this.repository.GetWeatherForecastByIdAsync(id);
             
             if (forecast == null)
             {
@@ -124,13 +124,36 @@
         }
 
         /// <summary>
-        /// Posts a weather forecast.
+        /// Puts a new weather forecast.
         /// </summary>
         /// <param name="forecast">The forecast to be created within the repository.</param>
         /// <returns></returns>
         //[RequiredScope("WeatherForecasts")]
-        [HttpPost("WeatherForecast", Name = "PostWeatherForecast")]
-        public async Task<IActionResult> PostWeatherForecastAsync([FromBody] WeatherForecast forecast)
+        [HttpPut("WeatherForecast", Name = "PutWeatherForecast")]
+        public async Task<ActionResult<WeatherForecast>> PutWeatherForecastAsync([FromBody] WeatherForecast forecast)
+        {
+            var tracer = this.tracerProvider.GetTracer(this.GetType().FullName);
+
+            using var span = tracer.StartActiveSpan(nameof(PutWeatherForecastAsync));
+
+            if (forecast == null)
+            {
+                return BadRequest("Weather forecast is null.");
+            }
+
+            await this.repository.AddWeatherForecastAsync(forecast);
+
+            return CreatedAtAction("PutWeatherForecast", new { id = forecast.Id }, forecast);
+        }
+
+        /// <summary>
+        /// Puts a new weather forecast.
+        /// </summary>
+        /// <param name="forecast">The forecast to be created within the repository.</param>
+        /// <returns></returns>
+        //[RequiredScope("WeatherForecasts")]
+        [HttpPost("WeatherForecast{id}", Name = "PostWeatherForecast")]
+        public async Task<ActionResult<WeatherForecast>> PostWeatherForecastAsync([FromBody] WeatherForecast forecast)
         {
             var tracer = this.tracerProvider.GetTracer(this.GetType().FullName);
 
@@ -141,9 +164,9 @@
                 return BadRequest("Weather forecast is null.");
             }
 
-            await this.repository.SaveForecastAsync(forecast);
+            await this.repository.UpdateWeatherForecastAsync(forecast);
 
-            return CreatedAtAction("GetWeatherForecast", new { id = forecast.Id }, forecast);
+            return CreatedAtAction("PostWeatherForecast", new { id = forecast.Id }, forecast);
         }
 
         /// <summary>
@@ -159,14 +182,14 @@
 
             using var span = tracer.StartActiveSpan(nameof(DeleteWeatherForecastAsync));
 
-            var forecast = await this.repository.GetForecastByIdAsync(id);
+            var forecast = await this.repository.GetWeatherForecastByIdAsync(id);
 
             if (forecast == null)
             {
                 return NotFound();
             }
 
-            await this.repository.DeleteForecastAsync(forecast);
+            await this.repository.DeleteWeatherForecastAsync(forecast);
 
             return NoContent();
         }
