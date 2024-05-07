@@ -13,15 +13,15 @@
     using Microsoft.AspNetCore.Authentication.JwtBearer;
 
     using Microsoft.AspNetCore.Builder;
-    
+
     using Microsoft.EntityFrameworkCore;
-    
+
     using Microsoft.Extensions.Diagnostics.HealthChecks;
 
     using Microsoft.Extensions.Logging;
 
     using Microsoft.Identity.Web;
-    
+
     using Microsoft.OpenApi.Models;
 
     using OpenTelemetry.Metrics;
@@ -31,7 +31,7 @@
     using OpenTelemetry.Trace;
 
     using System.Text.Json;
-    
+
     using WeatherForecastMicroservice.Entities;
 
     /// <summary>
@@ -92,7 +92,7 @@
             {
                 // Azure SQL connection string is stored within Azure Key Vault and read from Azure App Configuration.
                 var connectionString = builder.Configuration["AzureSqlConnection"];
-                
+
                 if (string.IsNullOrEmpty(connectionString))
                 {
                     throw new InvalidOperationException("The connection string could not be read from Azure App Configuration.");
@@ -190,27 +190,10 @@
             else
             {
                 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddMicrosoftIdentityWebApi(options =>
-                    {
-                        // Configuration from the "EntraID" section in appsettings.json
-                        builder.Configuration.Bind("EntraID", options);
-                    },
-                    options => {
-                        // Optional: setup token validation parameters if necessary
-                        options.TokenValidationParameters.ValidateIssuer = true;
-                        options.TokenValidationParameters.ValidIssuer = $"https://login.microsoftonline.com/{builder.Configuration["EntraID:TenantId"]}/v2.0";
-                        options.TokenValidationParameters.ValidateAudience = true;
-                        options.TokenValidationParameters.ValidAudience = builder.Configuration["EntraID:ClientId"];
-                        options.TokenValidationParameters.ValidateLifetime = true;
-                        options.TokenValidationParameters.ValidateIssuerSigningKey = true;
-                    });
+                    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("EntraID"));
 
                 builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
-                    // Set Authority
-                    options.Authority = $"https://login.microsoftonline.com/{builder.Configuration["EntraID:TenantId"]}/v2.0";
-
-                    // Optional: Customize the events as needed
                     var tokenValidatedHandler = options.Events.OnTokenValidated;
 
                     options.Events.OnTokenValidated = async context =>
@@ -219,24 +202,22 @@
                         {
                             await tokenValidatedHandler(context);
                         }
-
-                        // Additional validation logic can be placed here if needed
                     };
 
                     var authenticationFailedHandler = options.Events.OnAuthenticationFailed;
 
                     options.Events.OnAuthenticationFailed = async context =>
                     {
-                        context.Response.Headers.Add("Content-Type", "application/json");
+                        context.Response.Headers["Content-Type"] = "application/json";
+
                         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
-                        var errorInfo = JsonSerializer.Serialize(new
+                        await context.Response.WriteAsync(JsonSerializer.Serialize(new
                         {
-                            Message = context.Exception.Message,
-                            StackTrace = context.Exception.StackTrace
-                        });
+                            context.Exception.Message,
 
-                        await context.Response.WriteAsync(errorInfo);
+                            context.Exception.StackTrace
+                        }));
 
                         if (authenticationFailedHandler != null)
                         {
