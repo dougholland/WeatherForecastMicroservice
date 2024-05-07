@@ -23,7 +23,7 @@
     /// </summary>
     [ApiController]
     [Route("/api")]
-    //[Authorize]
+    [Authorize]
     public class WeatherForecastController : ControllerBase
     {
         /// <summary>
@@ -81,7 +81,7 @@
         /// Gets a list of weather forecasts.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation to get all forecasts. The task result contains all the weather forecasts.</returns>
-        //[RequiredScope("WeatherForecasts")]
+        [RequiredScope("WeatherForecasts")]
         [HttpGet("WeatherForecasts", Name = "GetWeatherForecasts")]
         [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 120)]
         public async Task<ActionResult<IEnumerable<WeatherForecast>>> GetWeatherForecastsAsync()
@@ -105,7 +105,7 @@
         /// <param name="id">The identifier of the weather forecast.</param>
         /// <returns>A task that represents the asynchronous operation to get a weather forecast. The task result contains the weather forecast.</returns>
         /// <exception cref="NotImplementedException"></exception>
-        //[RequiredScope("WeatherForecasts")]
+        [RequiredScope("WeatherForecasts")]
         [HttpGet("WeatherForecast/{id}", Name = "GetWeatherForecast")]
         public async Task<ActionResult<WeatherForecast>> GetWeatherForecastAsync(int id)
         {
@@ -128,7 +128,7 @@
         /// </summary>
         /// <param name="forecast">The forecast to be created within the repository.</param>
         /// <returns></returns>
-        //[RequiredScope("WeatherForecasts")]
+        [RequiredScope("WeatherForecasts")]
         [HttpPut("WeatherForecast", Name = "PutWeatherForecast")]
         public async Task<ActionResult<WeatherForecast>> PutWeatherForecastAsync([FromBody] WeatherForecast forecast)
         {
@@ -151,7 +151,7 @@
         /// </summary>
         /// <param name="forecast">The forecast to be created within the repository.</param>
         /// <returns></returns>
-        //[RequiredScope("WeatherForecasts")]
+        [RequiredScope("WeatherForecasts")]
         [HttpPost("WeatherForecast/{id}", Name = "PostWeatherForecast")]
         public async Task<ActionResult<WeatherForecast>> PostWeatherForecastAsync([FromBody] WeatherForecast forecast)
         {
@@ -174,7 +174,7 @@
         /// </summary>
         /// <param name="id">The identifier of the weather forecast.</param>
         /// <returns>A task that represents the asynchronous operation to delete a weather forecast. The task result indicates whether the weather forecast was successfully deleted.</returns>
-        //[RequiredScope("WeatherForecasts")]
+        [RequiredScope("WeatherForecasts")]
         [HttpDelete("WeatherForecast/{id}", Name = "DeleteWeatherForecast")]
         public async Task<IActionResult> DeleteWeatherForecastAsync(int id)
         {
