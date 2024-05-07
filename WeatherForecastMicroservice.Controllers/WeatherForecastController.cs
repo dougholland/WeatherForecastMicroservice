@@ -152,7 +152,7 @@
         /// <param name="forecast">The forecast to be created within the repository.</param>
         /// <returns></returns>
         //[RequiredScope("WeatherForecasts")]
-        [HttpPost("WeatherForecast{id}", Name = "PostWeatherForecast")]
+        [HttpPost("WeatherForecast/{id}", Name = "PostWeatherForecast")]
         public async Task<ActionResult<WeatherForecast>> PostWeatherForecastAsync([FromBody] WeatherForecast forecast)
         {
             var tracer = this.tracerProvider.GetTracer(this.GetType().FullName);
@@ -175,7 +175,7 @@
         /// <param name="id">The identifier of the weather forecast.</param>
         /// <returns>A task that represents the asynchronous operation to delete a weather forecast. The task result indicates whether the weather forecast was successfully deleted.</returns>
         //[RequiredScope("WeatherForecasts")]
-        [HttpDelete("WeatherForecast{id}", Name = "DeleteWeatherForecast")]
+        [HttpDelete("WeatherForecast/{id}", Name = "DeleteWeatherForecast")]
         public async Task<IActionResult> DeleteWeatherForecastAsync(int id)
         {
             var tracer = this.tracerProvider.GetTracer(this.GetType().FullName);
