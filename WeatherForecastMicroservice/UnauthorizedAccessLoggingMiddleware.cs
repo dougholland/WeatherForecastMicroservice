@@ -2,6 +2,8 @@
 {
     using System.Diagnostics;
 
+    using System.Security.Claims;
+
     /// <summary>
     /// Custom ASP.NET Core middleware that logs unauthorized access attempts.
     /// </summary>
@@ -39,6 +41,15 @@
                 span?.SetTag("path", context.Request.Path);
                 
                 span?.SetTag("method", context.Request.Method);
+
+                span?.SetTag("status.code", context.Response.StatusCode);
+
+                if (context.User.Identity?.IsAuthenticated == true)
+                {
+                    span?.SetTag("user", context.User.Identity.Name);
+
+                    span?.SetTag("user.id", context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+                }
             }
         }
     }
