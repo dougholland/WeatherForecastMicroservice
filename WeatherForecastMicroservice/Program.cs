@@ -171,11 +171,11 @@
 
                 if (!string.IsNullOrEmpty(endpoint))
                 {
-                    options.Connect(new Uri(endpoint), new ManagedIdentityCredential());
-                    //.ConfigureKeyVault(vault =>
-                    //{
-                    //    vault.SetCredential(new DefaultAzureCredential());
-                    //});
+                    options.Connect(new Uri(endpoint), new ManagedIdentityCredential())
+                        .ConfigureKeyVault(vault =>
+                        {
+                            vault.SetCredential(new ManagedIdentityCredential());
+                        });
                 }
                 else
                 {
