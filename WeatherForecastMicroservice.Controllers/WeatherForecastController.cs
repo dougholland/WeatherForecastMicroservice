@@ -106,7 +106,7 @@
         /// <returns>A task that represents the asynchronous operation to get a weather forecast. The task result contains the weather forecast.</returns>
         /// <exception cref="NotImplementedException"></exception>
         //[RequiredScope("WeatherForecasts")]
-        [HttpGet("WeatherForecast{id}", Name = "GetWeatherForecast")]
+        [HttpGet("WeatherForecast/{id}", Name = "GetWeatherForecast")]
         public async Task<ActionResult<WeatherForecast>> GetWeatherForecastAsync(int id)
         {
             var tracer = this.tracerProvider.GetTracer(this.GetType().FullName);
