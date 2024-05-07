@@ -54,7 +54,7 @@
             var builder = WebApplication.CreateBuilder(args);
 
             // configure cross-origin resource sharing (CORS).
-            ConfigureCORS(builder);
+            // ConfigureCORS(builder);
 
             // configure in-memory cache - alternatively, configure distributed cache if service is expected to scale to multiple instances.
             builder.Services.AddMemoryCache();
@@ -130,7 +130,7 @@
                 // use the exception handler in other environments.
                 app.UseExceptionHandler("/error");
 
-                app.UseCors();
+                // app.UseCors();
             }
 
             app.UseMiddleware<UnauthorizedAccessLoggingMiddleware>();
