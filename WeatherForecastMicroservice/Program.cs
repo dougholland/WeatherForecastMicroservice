@@ -131,6 +131,8 @@
                 app.UseCors();
             }
 
+            app.UseMiddleware<UnauthorizedAccessLoggingMiddleware>();
+
             app.UseAuthentication();
 
             app.UseAuthorization();
@@ -211,6 +213,7 @@
                         await context.Response.WriteAsync(JsonSerializer.Serialize(new
                         {
                             context.Exception.Message,
+
                             context.Exception.StackTrace
                         }));
 
