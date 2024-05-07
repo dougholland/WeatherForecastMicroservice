@@ -22,10 +22,10 @@
         }
 
         /// <summary>
-        /// 
+        /// Determines whether the current HTTP request is unauthorized and logs details about unauthorized access attempts.
         /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
+        /// <param name="context">An <see cref="T:HttpContext"/> containing the information about the current HTTP request.</param>
+        /// <returns>A task that represents the asynchronous operation to process the HTTP request.</returns>
         public async Task Invoke(HttpContext context)
         {
             await this.request(context);
@@ -35,7 +35,9 @@
                 var span = Activity.Current;
 
                 span?.SetTag("unauthorized.access", true);
+
                 span?.SetTag("path", context.Request.Path);
+                
                 span?.SetTag("method", context.Request.Method);
             }
         }
