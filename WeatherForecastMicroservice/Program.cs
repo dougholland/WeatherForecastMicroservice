@@ -29,7 +29,9 @@
     using OpenTelemetry.Resources;
 
     using OpenTelemetry.Trace;
+
     using System.Text.Json;
+    
     using WeatherForecastMicroservice.Entities;
 
     /// <summary>
