@@ -165,14 +165,30 @@
         /// <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/> instance used to build the web application or services.</param>
         private static void ConfigureAzureKeyVault(WebApplicationBuilder builder)
         {
-            builder.Configuration.AddAzureAppConfiguration(options =>
+            if (builder.Environment.IsDevelopment())
             {
-                options.Connect(builder.Configuration["AzureAppConfiguration:ConnectionString"])
-                    .ConfigureKeyVault(vault =>
+                // builder.Configuration.AddUserSecrets<Program>();
+            }
+            else
+            {
+                builder.Configuration.AddAzureAppConfiguration(options =>
+                {
+                    var endpoint = builder.Configuration["AzureAppConfiguration:EndPoint"] ?? string.Empty;
+
+                    if (!string.IsNullOrEmpty(endpoint))
                     {
-                        vault.SetCredential(new DefaultAzureCredential());
-                    });
-            });
+                        options.Connect(new Uri(endpoint), new ManagedIdentityCredential())
+                        .ConfigureKeyVault(vault =>
+                        {
+                            vault.SetCredential(new DefaultAzureCredential());
+                        });
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("The connection string could not be read from Azure App Configuration.");
+                    }
+                });
+            }
         }
 
         /// <summary>
