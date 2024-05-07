@@ -17,16 +17,6 @@
         /// <summary>
         /// Creates an instance of the <see cref="T:WeatherForecastRepository"/> class. 
         /// </summary>
-        public WeatherForecastRepository()
-        {
-            WeatherForecastDbContextFactory factory = new WeatherForecastDbContextFactory();
-
-            this.context = factory.CreateDbContext();
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="T:WeatherForecastRepository"/> class. 
-        /// </summary>
         /// <param name="context">An instance of the <see cref="T:WeatherForecastDbContext"/> to be used by the repository.</param>
         public WeatherForecastRepository(WeatherForecastDbContext context)
         {

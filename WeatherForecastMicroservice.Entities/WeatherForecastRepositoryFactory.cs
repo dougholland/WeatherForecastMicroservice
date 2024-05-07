@@ -8,7 +8,9 @@
 
         public IWeatherForecastRepository CreateRepository()
         {
-            return new WeatherForecastRepository() as IWeatherForecastRepository;
+            WeatherForecastDbContext context = new WeatherForecastDbContextFactory().CreateDbContext();
+
+            return new WeatherForecastRepository(context) as IWeatherForecastRepository;
         }
     }
 }
