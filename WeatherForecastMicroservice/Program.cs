@@ -190,10 +190,27 @@
             else
             {
                 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("EntraID"));
+                    .AddMicrosoftIdentityWebApi(options =>
+                    {
+                        // Configuration from the "EntraID" section in appsettings.json
+                        builder.Configuration.Bind("EntraID", options);
+                    },
+                    options => {
+                        // Optional: setup token validation parameters if necessary
+                        options.TokenValidationParameters.ValidateIssuer = true;
+                        options.TokenValidationParameters.ValidIssuer = $"https://login.microsoftonline.com/{builder.Configuration["EntraID:TenantId"]}/v2.0";
+                        options.TokenValidationParameters.ValidateAudience = true;
+                        options.TokenValidationParameters.ValidAudience = builder.Configuration["EntraID:ClientId"];
+                        options.TokenValidationParameters.ValidateLifetime = true;
+                        options.TokenValidationParameters.ValidateIssuerSigningKey = true;
+                    });
 
                 builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
+                    // Set Authority
+                    options.Authority = $"https://login.microsoftonline.com/{builder.Configuration["EntraID:TenantId"]}/v2.0";
+
+                    // Optional: Customize the events as needed
                     var tokenValidatedHandler = options.Events.OnTokenValidated;
 
                     options.Events.OnTokenValidated = async context =>
@@ -202,22 +219,24 @@
                         {
                             await tokenValidatedHandler(context);
                         }
+
+                        // Additional validation logic can be placed here if needed
                     };
 
                     var authenticationFailedHandler = options.Events.OnAuthenticationFailed;
 
                     options.Events.OnAuthenticationFailed = async context =>
                     {
-                        context.Response.Headers["Content-Type"] = "application/json";
-
+                        context.Response.Headers.Add("Content-Type", "application/json");
                         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
-                        await context.Response.WriteAsync(JsonSerializer.Serialize(new
+                        var errorInfo = JsonSerializer.Serialize(new
                         {
-                            context.Exception.Message,
+                            Message = context.Exception.Message,
+                            StackTrace = context.Exception.StackTrace
+                        });
 
-                            context.Exception.StackTrace
-                        }));
+                        await context.Response.WriteAsync(errorInfo);
 
                         if (authenticationFailedHandler != null)
                         {
