@@ -164,31 +164,24 @@
         /// </remarks>
         /// <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/> instance used to build the web application or services.</param>
         private static void ConfigureAzureKeyVault(WebApplicationBuilder builder)
-        {
-            if (builder.Environment.IsDevelopment())
+        {            
+            builder.Configuration.AddAzureAppConfiguration(options =>
             {
-                // builder.Configuration.AddUserSecrets<Program>();
-            }
-            else
-            {
-                builder.Configuration.AddAzureAppConfiguration(options =>
-                {
-                    var endpoint = builder.Configuration["AzureAppConfiguration:EndPoint"] ?? string.Empty;
+                var endpoint = builder.Configuration["AzureAppConfiguration:EndPoint"] ?? string.Empty;
 
-                    if (!string.IsNullOrEmpty(endpoint))
+                if (!string.IsNullOrEmpty(endpoint))
+                {
+                    options.Connect(new Uri(endpoint), new ManagedIdentityCredential())
+                    .ConfigureKeyVault(vault =>
                     {
-                        options.Connect(new Uri(endpoint), new ManagedIdentityCredential())
-                        .ConfigureKeyVault(vault =>
-                        {
-                            vault.SetCredential(new DefaultAzureCredential());
-                        });
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("The connection string could not be read from Azure App Configuration.");
-                    }
-                });
-            }
+                        vault.SetCredential(new DefaultAzureCredential());
+                    });
+                }
+                else
+                {
+                    throw new InvalidOperationException("Invalid Azure App Configuration endpoint URL.");
+                }
+            });
         }
 
         /// <summary>
