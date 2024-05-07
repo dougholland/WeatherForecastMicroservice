@@ -24,14 +24,14 @@
         /// Adds the specified weather forecast to the repository.
         /// </summary>
         /// <param name="forecast">The weather forecast to be saved within the repository.</param>
-        /// <returns>The number of </returns>
+        /// <returns>A task that represents the asynchronous update operation. The task result contains the weather forecast that was added to the repository.</returns>
         Task<WeatherForecast> AddWeatherForecastAsync(WeatherForecast forecast);
 
         /// <summary>
         /// Updates the weather forecast within the repository.
         /// </summary>
         /// <param name="forecast">The weather forecast to be updated.</param>
-        /// <returns>A task that represents the asynchronous update operation. The task result contains the number of state entries updated within the database.</returns>
+        /// <returns>A task that represents the asynchronous update operation. The task result contains the updated weather forecast.</returns>
         Task<WeatherForecast> UpdateWeatherForecastAsync(WeatherForecast forecast);
 
         /// <summary>
