@@ -23,7 +23,7 @@
     /// </summary>
     [ApiController]
     [Route("/api")]
-    [Authorize]
+    //[Authorize]
     public class WeatherForecastController : ControllerBase
     {
         /// <summary>
