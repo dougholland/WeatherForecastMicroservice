@@ -90,12 +90,6 @@
 
             using var span = tracer.StartActiveSpan(nameof(GetWeatherForecastsAsync));
 
-            var sender = this.serviceBus.CreateSender(this.configuration["AzureServiceBus:Queue"]);
-
-            var message = new ServiceBusMessage("GetWeatherForecastsAsync");
-
-            await (sender?.SendMessageAsync(message) ?? Task.CompletedTask);
-
             return Ok(await this.repository.GetWeatherForecastsAsync());
         }
 
