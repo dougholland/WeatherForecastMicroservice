@@ -15,7 +15,7 @@
     public class WeatherForecastRepositoryUnitTests
     {
         /// <summary>
-        /// 
+        /// The options for the database context.
         /// </summary>
         private DbContextOptions<WeatherForecastDbContext>? options;
 
@@ -37,7 +37,7 @@
         [TestMethod]
         public async Task GetAllForecastsAsnc()
         {
-            using var context = new WeatherForecastDbContext(options);
+            using var context = new WeatherForecastDbContext(options!);
 
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
 
@@ -62,7 +62,7 @@
         [TestMethod]
         public async Task GetWeatherForecastAsync()
         {
-            using var context = new WeatherForecastDbContext(options);
+            using var context = new WeatherForecastDbContext(options!);
 
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
 
@@ -93,7 +93,7 @@
         [TestMethod]
         public async Task AddWeatherForecast()
         {
-            using var context = new WeatherForecastDbContext(options);
+            using var context = new WeatherForecastDbContext(options!);
 
             var repository = new WeatherForecastRepository(context);
 
@@ -119,7 +119,7 @@
         [TestMethod]
         public async Task UpdateWeatherForecast()
         {
-            using var context = new WeatherForecastDbContext(options);
+            using var context = new WeatherForecastDbContext(options!);
            
             var repository = new WeatherForecastRepository(context);
 
@@ -155,7 +155,7 @@
         [TestMethod]
         public async Task DeleteWeatherForecast()
         {
-            using var context = new WeatherForecastDbContext(options);
+            using var context = new WeatherForecastDbContext(options!);
 
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
 
@@ -185,7 +185,7 @@
         [TestMethod]
         public async Task DeleteWeatherForecastById()
         {
-            using var context = new WeatherForecastDbContext(options);
+            using var context = new WeatherForecastDbContext(options!);
 
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
 
