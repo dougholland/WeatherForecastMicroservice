@@ -99,7 +99,9 @@ namespace WeatherForecastMicroservice.UnitTests
 
             // Assert.AreNotEqual<int>(forecast.Id, 0);
 
-            // Assert.IsInstanceOfType<WeatherForecast>(result.Value);
+            Assert.IsInstanceOfType<ActionResult<WeatherForecast>>(result);
+
+            Assert.IsInstanceOfType(result.Result, typeof(CreatedAtActionResult));
 
             // result = await this.controller!.GetWeatherForecastAsync(result.Value.Id);
 
