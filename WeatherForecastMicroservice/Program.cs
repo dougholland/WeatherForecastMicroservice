@@ -95,7 +95,8 @@
 
                 if (string.IsNullOrEmpty(connectionString))
                 {
-                    throw new InvalidOperationException("The connection string could not be read from Azure App Configuration.");
+                    // throw new InvalidOperationException("The connection string could not be read from Azure App Configuration.");
+                    connectionString = "Server=tcp:weatherforecastmicroservice-server.database.windows.net,1433;Initial Catalog=weatherforecastmicroservice-database;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active Directory Default\";";
                 }
 
                 options.UseSqlServer(connectionString);
