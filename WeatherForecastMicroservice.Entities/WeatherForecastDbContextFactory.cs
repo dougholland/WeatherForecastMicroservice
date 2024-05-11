@@ -44,11 +44,12 @@
         {
             var builder = new DbContextOptionsBuilder<WeatherForecastDbContext>();
 
-            string connectionString = Environment.GetEnvironmentVariable("AzureSqlConnection") ?? string.Empty;
+            // Get the connection string from the GitHub actions environment variable.
+            string connectionString = Environment.GetEnvironmentVariable("AZURESQLCONNECTION") ?? string.Empty;
             
             if (string.IsNullOrEmpty(connectionString))
             {
-                Trace.WriteLine("AzureSqlConnection environment variable not found.");
+                throw new Exception("GitHub Actions environment variable 'AzureSqlConnection' not found.");
             }
             else
             {
