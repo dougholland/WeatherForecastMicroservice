@@ -5,6 +5,7 @@
     using Microsoft.EntityFrameworkCore.Design;
 
     using Microsoft.Extensions.Configuration;
+    using System.Diagnostics;
 
     /// <summary>
     /// Creates instances of the <see cref="T:WeatherForecastDbContext"/> class.
@@ -41,16 +42,18 @@
         /// <returns>An instance of the <see cref="T:WeatherForecastDbContext"/> class.</returns>
         public WeatherForecastDbContext CreateDbContext(string[] args)
         {
-            IConfiguration configuration = new ConfigurationBuilder()
-                .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "bin", "Release", "net8.0"))
-                .AddJsonFile("appsettings.json")
-                .Build();
-
             var builder = new DbContextOptionsBuilder<WeatherForecastDbContext>();
 
-            string connectionString = configuration["AzureSqlConnection"] ?? string.Empty;
-
-            builder.UseSqlServer(connectionString);
+            string connectionString = Environment.GetEnvironmentVariable("AzureSqlConnection") ?? string.Empty;
+            
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                Trace.WriteLine("AzureSqlConnection environment variable not found.");
+            }
+            else
+            {
+                builder.UseSqlServer(connectionString);
+            }
 
             return new WeatherForecastDbContext(builder.Options);
         }
