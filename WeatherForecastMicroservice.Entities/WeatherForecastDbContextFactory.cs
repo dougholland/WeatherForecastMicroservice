@@ -13,6 +13,11 @@
     public class WeatherForecastDbContextFactory : IDesignTimeDbContextFactory<WeatherForecastDbContext>
     {
         /// <summary>
+        /// The name of the GitHub Actions environment variable that contains the connection string.
+        /// </summary>
+        private const string EnvironmentVariable = "DB_CONNECTION_STRING";
+
+        /// <summary>
         /// Creates an instance of the <see cref="T:WeatherForecastDbContext"/> class.
         /// </summary>
         /// <returns>An instance of the <see cref="T:WeatherForecastDbContext"/> class.</returns>
@@ -45,11 +50,11 @@
             var builder = new DbContextOptionsBuilder<WeatherForecastDbContext>();
 
             // Get the connection string from the GitHub actions environment variable.
-            string connectionString = Environment.GetEnvironmentVariable("AZURESQLCONNECTION") ?? string.Empty;
+            string connectionString = Environment.GetEnvironmentVariable(EnvironmentVariable) ?? string.Empty;
             
             if (string.IsNullOrEmpty(connectionString))
             {
-                throw new Exception("GitHub Actions environment variable 'AzureSqlConnection' not found.");
+                throw new Exception(string.Format("GitHub Actions environment variable '{0}' not found.", EnvironmentVariable));
             }
             else
             {
