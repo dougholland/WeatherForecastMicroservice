@@ -26,7 +26,7 @@
         {
             var factory = new WeatherForecastDbContextFactory();
 
-            var context = factory.CreateDbContext();
+            var context = factory.CreateDbContext(new string[] { });
 
             Assert.IsNotNull(context);
         }

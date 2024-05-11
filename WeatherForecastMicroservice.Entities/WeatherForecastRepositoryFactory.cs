@@ -8,7 +8,7 @@
 
         public IWeatherForecastRepository CreateRepository()
         {
-            WeatherForecastDbContext context = new WeatherForecastDbContextFactory().CreateDbContext();
+            WeatherForecastDbContext context = new WeatherForecastDbContextFactory().CreateDbContext(new string[] { });
 
             return new WeatherForecastRepository(context) as IWeatherForecastRepository;
         }
