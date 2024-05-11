@@ -22,11 +22,6 @@ jobs:
           dotnet-version: '8.x'
           include-prerelease: true
 
-      - name: Install Entity Framework Core tools and update PATH
-        run: |
-          dotnet tool install --global dotnet-ef
-          echo "PATH=$env:PATH;$env:USERPROFILE\.dotnet\tools" | Add-Content -Path $env:GITHUB_ENV
-
       - name: Build with dotnet
         run: dotnet build WeatherForecastMicroservice.slnf --configuration Release
 
@@ -65,6 +60,10 @@ jobs:
           package: .
 
       - name: Update database
-        run: dotnet ef database update
+        run: |
+          dotnet tool install --global dotnet-ef
+          echo "PATH=$PATH;$env:USERPROFILE\.dotnet\tools" | Set-Content -Path $env:GITHUB_ENV
+          dotnet ef database update
         env:
+          DOTNET_ROOT: ${{ runner.tool_cache }}/dotnet
           ConnectionString: ${{ secrets.AZURESQL }}
