@@ -58,3 +58,8 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_172A5CB80DEB4400AE680C4D6BDE3502 }}
           package: .
+
+      - name: Update database
+        run: dotnet ef database update
+        env:
+          ConnectionString: ${{ secrets.AZURESQL }}
