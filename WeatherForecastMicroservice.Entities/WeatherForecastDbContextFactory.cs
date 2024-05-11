@@ -5,7 +5,6 @@
     using Microsoft.EntityFrameworkCore.Design;
 
     using Microsoft.Extensions.Configuration;
-    using System.Diagnostics;
 
     /// <summary>
     /// Creates instances of the <see cref="T:WeatherForecastDbContext"/> class.
