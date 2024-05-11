@@ -31,6 +31,17 @@ jobs:
       - name: dotnet publish
         run: dotnet publish WeatherForecastMicroservice.slnf -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
+      - name: Install Entity Framework Core tools
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Update database
+        run: dotnet ef database update --project WeatherForecastMicroservice.Entities.csproj
+        working-directory: ./WeatherForecastMicroservice/WeatherForecastMicroservice.Entities
+
+      - name: Build and publish
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        working-directory: ./WeatherForecastMicroservice
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
@@ -58,13 +69,3 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_172A5CB80DEB4400AE680C4D6BDE3502 }}
           package: .
-
-      - name: Update database
-        run: |
-          dotnet tool install --global dotnet-ef
-          echo "PATH=$PATH;$env:USERPROFILE\.dotnet\tools" | Set-Content -Path $env:GITHUB_ENV
-          dotnet ef database update --project WeatherForecastMicroservice.Entities/WeatherForecastMicroservice.Entities.csproj
-        working-directory: ./WeatherForecastMicroservice
-        env:
-          DOTNET_ROOT: ${{ runner.tool_cache }}/dotnet
-          ConnectionString: ${{ secrets.AZURESQL }}
