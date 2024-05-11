@@ -30,6 +30,10 @@
 
     using OpenTelemetry.Trace;
 
+    using System.Diagnostics;
+
+    using System.Runtime.CompilerServices;
+    
     using System.Text.Json;
 
     using WeatherForecastMicroservice.Entities;
@@ -96,7 +100,7 @@
                 if (string.IsNullOrEmpty(connectionString))
                 {
                     // throw new InvalidOperationException("The connection string could not be read from Azure App Configuration.");
-                    connectionString = "Server=tcp:weatherforecastmicroservice-server.database.windows.net,1433;Initial Catalog=weatherforecastmicroservice-database;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active Directory Default\";";
+                    connectionString = "Data Source=weatherforecastmicroservice-server.database.windows.net,1433;Initial Catalog=weatherforecastmicroservice-database;User ID=weatherforecastmicroservice-server-admin;Password=ZK4m9iT6cZkIi5$B";
                 }
 
                 options.UseSqlServer(connectionString);
@@ -165,24 +169,40 @@
         /// </remarks>
         /// <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/> instance used to build the web application or services.</param>
         private static void ConfigureAzureKeyVault(WebApplicationBuilder builder)
-        {            
-            builder.Configuration.AddAzureAppConfiguration(options =>
+        {
+            try
             {
-                var endpoint = builder.Configuration["AzureAppConfiguration:EndPoint"] ?? string.Empty;
+                if (!builder.Environment.IsDevelopment())
+                {
+                    builder.Configuration.AddAzureAppConfiguration(options =>
+                    {
+                        var endpoint = builder.Configuration["AzureAppConfiguration:EndPoint"] ?? string.Empty;
 
-                if (!string.IsNullOrEmpty(endpoint))
-                {
-                    options.Connect(new Uri(endpoint), new ManagedIdentityCredential())
-                        .ConfigureKeyVault(vault =>
+                        if (!string.IsNullOrEmpty(endpoint))
                         {
-                            vault.SetCredential(new ManagedIdentityCredential());
-                        });
+                            options.Connect(new Uri(endpoint), new ManagedIdentityCredential())
+                                .ConfigureKeyVault(vault =>
+                                {
+                                    vault.SetCredential(new ManagedIdentityCredential());
+                                });
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Invalid Azure App Configuration endpoint URL.");
+                        }
+                    });
                 }
-                else
-                {
-                    throw new InvalidOperationException("Invalid Azure App Configuration endpoint URL.");
-                }
-            });
+            }
+            catch (CredentialUnavailableException ex)
+            {
+                var tracer = TracerProvider.Default.GetTracer(serviceName);
+
+                using var span = tracer.StartActiveSpan(nameof(ConfigureAzureKeyVault), SpanKind.Internal);
+
+                span.RecordException(ex);
+                
+                throw;
+            }
         }
 
         /// <summary>
