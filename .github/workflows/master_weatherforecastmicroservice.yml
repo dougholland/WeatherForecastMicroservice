@@ -23,7 +23,9 @@ jobs:
           include-prerelease: true
 
       - name: Install Entity Framework Core tools
-        run: dotnet tool install --global dotnet-ef
+        run: 
+          dotnet tool install --global dotnet-ef
+          echo "PATH=$PATH:$(echo $HOME/.dotnet/tools)" >> $GITHUB_ENV
         
       - name: Build with dotnet
         run: dotnet build WeatherForecastMicroservice.slnf --configuration Release
