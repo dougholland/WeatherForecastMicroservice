@@ -8,6 +8,33 @@
     public class WeatherForecast
     {
         /// <summary>
+        /// Creates a new instance of the <see cref="WeatherForecast"/> class.
+        /// </summary>
+        public WeatherForecast()
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="WeatherForecast"/> class with properties copied from another instance.
+        /// </summary>
+        /// <param name="weatherForecast">The instance of the <see cref="WeatherForecast"/> class to copy.</param>
+        public WeatherForecast(WeatherForecast weatherForecast)
+        {
+            if (weatherForecast == null)
+            {
+                throw new ArgumentNullException(nameof(weatherForecast), "Attempted to initialize a WeatherForecast object with a null reference.");
+            }
+
+            Id = weatherForecast.Id;
+
+            Date = weatherForecast.Date;
+
+            TemperatureC = weatherForecast.TemperatureC;
+
+            Summary = weatherForecast.Summary;
+        }
+
+        /// <summary>
         /// Gets or sets the identifier weather forecast.
         /// </summary>
         /// <value>The identifier of the weather forecast.</value>
