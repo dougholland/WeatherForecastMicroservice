@@ -41,6 +41,8 @@
             Assert.AreEqual<int>(copy.TemperatureC, 32);
 
             Assert.AreEqual<string>(copy.Summary, "Warm");
+
+            Assert.ThrowsException<ArgumentNullException>(() => new WeatherForecast(null));
         }
     }
 }
