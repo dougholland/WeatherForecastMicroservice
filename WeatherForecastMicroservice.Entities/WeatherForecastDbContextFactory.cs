@@ -53,7 +53,7 @@
             
             if (string.IsNullOrEmpty(connectionString))
             {
-                throw new Exception(string.Format("GitHub Actions environment variable '{0}' not found.", EnvironmentVariable));
+                throw new InvalidOperationException(string.Format("GitHub Actions environment variable '{0}' not found.", EnvironmentVariable));
             }
             else
             {
