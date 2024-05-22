@@ -85,27 +85,5 @@
             get;
             set;
         }
-
-        /// <summary>
-        /// Gets or sets the date and time from which the weather forecast is valid.
-        /// </summary>
-        /// <value>The date and time from which the weather forecast is valid.</value>
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime ValidFrom
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the date and time until which the weather forecast is valid.
-        /// </summary>
-        /// <value>The date and time until which the weather forecast is valid.</value>
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime ValidTo
-        {
-            get;
-            set;
-        }
     }
 }
