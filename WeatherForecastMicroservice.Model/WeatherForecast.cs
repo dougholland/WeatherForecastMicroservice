@@ -2,6 +2,8 @@
 {
     using System.ComponentModel.DataAnnotations;
 
+    using System.ComponentModel.DataAnnotations.Schema;
+
     /// <summary>
     /// Defines the weather forecast model.
     /// </summary>
@@ -79,6 +81,28 @@
         [Required]
         [MaxLength(50)]
         public string? Summary
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the date and time from which the weather forecast is valid.
+        /// </summary>
+        /// <value>The date and time from which the weather forecast is valid.</value>
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime ValidFrom
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the date and time until which the weather forecast is valid.
+        /// </summary>
+        /// <value>The date and time until which the weather forecast is valid.</value>
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime ValidTo
         {
             get;
             set;
