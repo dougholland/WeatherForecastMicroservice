@@ -37,31 +37,25 @@
         /// <param name="modelBuilder">The builder being used to construct the model for this context. Databases (and other extensions) typically define extension methods on this object that allow you to configure aspects of the model that are specific to a given database.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<WeatherForecast>(entity =>
-            {
-                entity.ToTable("WeatherForecasts")
-                    .HasKey(entity => entity.Id);
+            base.OnModelCreating(modelBuilder);
 
-                entity.Property(entity => entity.ValidFrom)
-                    .ValueGeneratedOnAddOrUpdate()
-                    .IsConcurrencyToken()
-                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+            modelBuilder.Entity<WeatherForecast>()
+                .ToTable("WeatherForecasts", tb => tb.IsTemporal(ttb =>
+                {
+                    ttb.HasPeriodStart("ValidFrom").HasColumnName("ValidFrom");
+                    ttb.HasPeriodEnd("ValidTo").HasColumnName("ValidTo");
+                    ttb.UseHistoryTable("WeatherForecastsHistory");
+                }));
 
-                entity.Property(entity => entity.ValidTo)
-                    .ValueGeneratedOnAddOrUpdate()
-                    .IsConcurrencyToken()
-                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+            modelBuilder.Entity<WeatherForecast>()
+                .Property<DateTime>("ValidFrom")
+                .HasColumnName("ValidFrom")
+                .ValueGeneratedOnAddOrUpdate();
 
-                entity.ToTable("WeatherForecasts", table => table.IsTemporal(
-                    temportalTableBuilder =>
-                    {
-                        temportalTableBuilder.HasPeriodStart("ValidFrom");
-
-                        temportalTableBuilder.HasPeriodEnd("ValidTo");
-
-                        temportalTableBuilder.UseHistoryTable("WeatherForecastTableHistory");
-                    }));
-            });
+            modelBuilder.Entity<WeatherForecast>()
+                .Property<DateTime>("ValidTo")
+                .HasColumnName("ValidTo")
+                .ValueGeneratedOnAddOrUpdate();
         }
     }
 }
