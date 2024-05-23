@@ -37,7 +37,7 @@ jobs:
       - name: Update database
         run: dotnet ef database update --project WeatherForecastMicroservice.Entities.csproj
         env:
-          DB_CONNECTION_STRING: ${{ secrets.AZURESQLCONNECTION }}
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
         working-directory: WeatherForecastMicroservice.Entities
 
       - name: Build and publish
