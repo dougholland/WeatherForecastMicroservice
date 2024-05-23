@@ -38,7 +38,7 @@
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+/*
             modelBuilder.Entity<WeatherForecast>()
                 .ToTable("WeatherForecasts", tb => tb.IsTemporal(ttb =>
                 {
@@ -56,6 +56,7 @@
                 .Property<DateTime>("ValidTo")
                 .HasColumnName("ValidTo")
                 .ValueGeneratedOnAddOrUpdate();
+*/
         }
     }
 }
